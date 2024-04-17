@@ -15,7 +15,7 @@ namespace ChatTerminal
         // Mod Details
         private const string modGUID = "bmatusiask.ChatTerminal";
         private const string modName = "ChatTerminal";
-        private const string modVersion = "1.0.0.0";
+        private const string modVersion = "1.0.0";
 
         private readonly Harmony harmony = new Harmony(modGUID);
         public static BaseUnityPlugin Instance { get; private set; }
