@@ -1,0 +1,10 @@
+{
+    "name": "ChatTerminal",
+    "version_number": "1.0.0",
+    "website_url": "https://github.com/bmatusiak/LethalChatTerminal",
+    "author": "bmatusiak",
+    "description": "Changes the In-Game Chat into a Terminal",
+    "dependencies": [
+        "BepInEx-BepInExPack-5.4.2100"
+    ]
+}
