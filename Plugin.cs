@@ -6,7 +6,6 @@ using UnityEngine;
 using BepInEx.Logging;
 using BepInEx;
 
-
 namespace ChatTerminal
 {
     [BepInPlugin(modGUID, modName, modVersion)]
@@ -15,11 +14,11 @@ namespace ChatTerminal
         // Mod Details
         private const string modGUID = "bmatusiask.ChatTerminal";
         private const string modName = "ChatTerminal";
-        private const string modVersion = "1.0.0";
+        private const string modVersion = "1.0.1";
 
         private readonly Harmony harmony = new Harmony(modGUID);
         public static BaseUnityPlugin Instance { get; private set; }
-        private ManualLogSource Log { get; set; }
+        internal ManualLogSource Log { get; set; }
 
         void Awake()
         {
@@ -36,9 +35,19 @@ namespace ChatTerminal
 
     internal class PluginPatch
     {
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(Terminal), "PlayTerminalAudioServerRpc")]
+        public static void TerminalPlayTerminalAudioServerRpc_Pre(ref Terminal __instance, ref int clipIndex)
+        {
+            if (!__instance.terminalInUse)
+            {
+                clipIndex = -1;
+            }
+        }
+
         [HarmonyPostfix]
         [HarmonyPatch(typeof(HUDManager), "Update")]
-        private static void Update_Post(ref TMP_InputField ___chatTextField, ref HUDElement ___Chat)
+        private static void HUDManagerUpdate_Post(ref TMP_InputField ___chatTextField, ref HUDElement ___Chat)
         {
             if (___chatTextField.isActiveAndEnabled)
             {
@@ -60,7 +69,7 @@ namespace ChatTerminal
 
         [HarmonyPatch(typeof(HUDManager), "SubmitChat_performed")]
         [HarmonyPrefix]
-        private static void SubmitChat_performed_Pre()
+        private static void HUDManagerSubmitChat_performed_Pre()
         {
             if (!HUDManager.Instance.localPlayer.isTypingChat) return;
             string cmd_text = HUDManager.Instance.chatTextField.text;
